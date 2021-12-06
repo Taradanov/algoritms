@@ -10,4 +10,3 @@ elif b >= a >= c or b <= a <= c:
     print(f'Среднее число a {a}')
 else:
     print(f'Среднее число c {c}')
-
