@@ -1,6 +1,8 @@
 # # 2. Закодируйте любую строку по алгоритму Хаффмана.
+
+# Неоптимально но самостоятельно)))
+
 from collections import Counter, OrderedDict
-from pprint import pprint
 from typing import Optional
 
 from binarytree import Node, NodeValue
@@ -25,16 +27,33 @@ def get_element_from_temporary_dict(key):
     return child_
 
 
-def get_dict(node: Node, key):
+def get_final_dict(node: Node, key):
     # left = 0
     # right = 1
     if node.left == None and node.right == None:
         final_dict[node.letters.replace("_", "")] = key
         return
 
-    get_dict(node.left, f'{key}0')
-    get_dict(node.right, f'{key}1')
+    get_final_dict(node.left, f'{key}0')
+    get_final_dict(node.right, f'{key}1')
 
+
+def code_string(input_string):
+    code_string = ''
+    for symbol in input_string:
+        code_string = code_string + final_dict.get(symbol)
+    return code_string
+
+
+def decode_string(code_string):
+    decode_string = ''
+
+    while len(code_string) > 0:
+        for k, v in final_dict.items():
+            if code_string.startswith(v):
+                decode_string += k
+                code_string = code_string.replace(f'{v}', '', 1)
+    return decode_string
 
 temporary_dict = {}
 
@@ -92,29 +111,10 @@ for value in temporary_dict.values():
 
 # Заполню словарь преобразования
 final_dict = {}
-get_dict(temporary_dict.popitem()[1], '')
+get_final_dict(temporary_dict.popitem()[1], '')
 
 print(final_dict)
 assert reference_weight == sum(frequency.values()), 'Ошибка вычисления контрольной суммы вхождений'
-
-
-def code_string(input_string):
-    code_string = ''
-    for symbol in input_string:
-        code_string = code_string + final_dict.get(symbol)
-    return code_string
-
-
-def decode_string(code_string):
-    decode_string = ''
-
-    while len(code_string) > 0:
-        for k, v in final_dict.items():
-            if code_string.startswith(v):
-                decode_string += k
-                code_string = code_string.replace(f'{v}', '', 1)
-    return decode_string
-
 
 code_string = code_string(input_string)
 
